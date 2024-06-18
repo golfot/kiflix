@@ -1,4 +1,4 @@
 // api/serverurl.js
 
-const targetUrl = 'https://new8.ngefilm21.yachts/';
+const targetUrl = 'https://tv.idlixofficial.net/';
 module.exports = targetUrl;

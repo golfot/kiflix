@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
 
     const page = req.query.page !== undefined ? req.query.page : 1;
     
-    let url = `${targetUrl}/${id}/`;
+    let url = `${targetUrl}${id}/`;
     
     if (page !== 1) {
         url += `page/${page}/`;

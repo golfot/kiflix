@@ -14,12 +14,21 @@ module.exports = async (req, res) => {
         res.status(200).end();
         return;
     }
-
     
+    
+    // Mengambil nilai parameter slugs dan server dari permintaan
+    const id = req.query.id || 'movie';
+
+
+    // Memeriksa apakah parameter slugs dan server telah diberikan
+    if (!id) {
+        res.status(400).json({ error: 'Parameter id movie or tvseries tidak ditemukan' });
+        return;
+    }
 
     const page = req.query.page !== undefined ? req.query.page : 1;
     
-    let url = `${targetUrl}/movie/`;
+    let url = `${targetUrl}/${id}/`;
     
     if (page !== 1) {
         url += `page/${page}/`;

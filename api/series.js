@@ -62,30 +62,22 @@ module.exports = async (req, res) => {
                 
             });
 
-            // Ambil semua nama nomer season <span> dengan class "title"
+            // Ambil semua elemen <span> dengan class "title"
             const titleElements = document.querySelectorAll('span[class="title"]');
             let seasontitle = [];
 
-            titleElements.forEach(titleElement => {
-             // Cek dan hapus elemen <i> yang mengandung tanggal
-            const iElement = titleElement.querySelector('i');
-            if (iElement) {
-                const datePattern = /\d{2}\. [A-Za-z]{3}, \d{4}/; // Pola untuk tanggal dalam format "03. Sep, 2021"
-                 if (datePattern.test(iElement.textContent)) {
-                    titleElement.removeChild(iElement);
-                 }
-              }
-            
-              // Ambil teks title tanpa elemen rating
-               const titleText = Array.from(titleElement.childNodes)
-                    .filter(node => node.nodeType === Node.TEXT_NODE || (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'DIV'))
-                    .map(node => node.textContent.trim())
-                    .join(' ');
-
-               seasontitle.push({
-                  title: titleText
-                });
-            });
+             titleElements.forEach(titleElement => {
+              // Ambil teks title
+              const titleText = titleElement.textContent.trim();
+              // Pola untuk season
+              const seasonPattern = /Season \d+/;
+              const match = titleText.match(seasonPattern);
+              if (match) {
+                  seasontitle.push({
+                     title: match[0]
+                  });
+               }
+           });
             
             
 

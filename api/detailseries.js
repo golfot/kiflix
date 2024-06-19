@@ -40,10 +40,9 @@ module.exports = async (req, res) => {
             const dom = new JSDOM(data);
             const document = dom.window.document;
 
-            // Mengambil data simponis
-            const simpinisElement = document.querySelector('div[itemprop="description"] p');
-            const simponis = simpinisElement ? simpinisElement.textContent.trim() : 'N/A';
-
+            const simponisElements = document.querySelectorAll('center p');
+            const simponis = simponisElements.length > 1 ? simponisElements[1].textContent.trim() : 'N/A';
+            
             // Mengambil semua data genre
             const genreElements = document.querySelectorAll('div[class="sgeneros"] a');
             let genre = [];
@@ -63,11 +62,27 @@ module.exports = async (req, res) => {
                 
             });
 
-            // Mengambil durasi
-            const iframeElement = document.querySelector('span[class="runtime"]');
-            const durasi = iframeElement ? iframeElement.textContent.trim() : 'N/A';
+            // mengambil episode 
+            
+            const episodeElements = document.querySelectorAll('div[class="episodiotitle"] a');
+            let episode = [];
 
-            // Mengambil Poster
+            episodeElements.forEach(element => {
+                    const title = element.textContent.trim();
+      
+                    let slug = element.getAttribute('href').trim();
+                    // Menghapus bagian "https" dan domain dari slug menggunakan regex
+                    slug = slug.replace(/^https?:\/\/[^/]+/, '');
+                    // Menghapus simbol slash ('/') pertama dan terakhir dari slug
+                    slug = slug.replace(/^\/|\/$/g, '');
+                    episode.push({
+                        title: title,
+                        slug: slug
+                    });
+                
+            });
+
+             // Mengambil Poster
             const posterElement = document.querySelector('div[class="poster"] img[itemprop="image"]');
             const poster = posterElement ? posterElement.getAttribute('src') : 'N/A';
 
@@ -81,8 +96,8 @@ module.exports = async (req, res) => {
                 title,
                 poster,
                 simponis,
-                durasi,
-                genre
+                genre,
+                episode
             };
 
             res.status(200).json(detailMovieObject);

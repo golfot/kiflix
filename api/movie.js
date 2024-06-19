@@ -63,6 +63,30 @@ module.exports = async (req, res) => {
                 
             });
 
+            const castElements = document.querySelectorAll('div[class="person"]');
+            let cast = [];
+
+            castElements.forEach(element => {
+                    const caracter = element.querySelector('div.caracter') ? element.querySelector('div.caracter').textContent.trim() : 'N/A';
+                    const thumb = element.querySelector('img') ? element.querySelector('img').getAttribute('src') : 'N/A';
+                    const title = element.querySelector('img') ? element.querySelector('img').getAttribute('alt') : 'N/A';
+               
+
+                
+                    let slug = element.querySelector('div.name a') ? element.querySelector('div.name a').getAttribute('href') : 'N/A';
+                    // Menghapus bagian "https" dan domain dari slug menggunakan regex
+                    slug = slug.replace(/^https?:\/\/[^/]+/, '');
+                    // Menghapus simbol slash ('/') pertama dan terakhir dari slug
+                    slug = slug.replace(/^\/|\/$/g, '');
+                    cast.push({
+                        title: title,
+                        caracter: caracter,
+                        thumb: thumb,
+                        slug: slug
+                    });
+                
+            });
+
             // Mengambil durasi
             const iframeElement = document.querySelector('span[class="runtime"]');
             const durasi = iframeElement ? iframeElement.textContent.trim() : 'N/A';
@@ -82,6 +106,7 @@ module.exports = async (req, res) => {
                 poster,
                 simponis,
                 durasi,
+                cast,
                 genre
             };
 

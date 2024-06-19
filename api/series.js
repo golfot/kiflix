@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
 
             // Ambil semua nama nomer season <span> dengan class "title"
             const titleElements = document.querySelectorAll('span[class="title"]');
-            const seasontitle = [];
+            let seasontitle = [];
 
             titleElements.forEach(titleElement => {
              // Cek dan hapus elemen <i> yang mengandung tanggal
@@ -124,6 +124,7 @@ module.exports = async (req, res) => {
                 poster,
                 simponis,
                 genre,
+                seasontitle,
                 episode
             };
 

@@ -62,6 +62,33 @@ module.exports = async (req, res) => {
                 
             });
 
+            // Ambil semua nama nomer season <span> dengan class "title"
+            const titleElements = document.querySelectorAll('span[class="title"]');
+            const seasontitle = [];
+
+            titleElements.forEach(titleElement => {
+             // Cek dan hapus elemen <i> yang mengandung tanggal
+            const iElement = titleElement.querySelector('i');
+            if (iElement) {
+                const datePattern = /\d{2}\. [A-Za-z]{3}, \d{4}/; // Pola untuk tanggal dalam format "03. Sep, 2021"
+                 if (datePattern.test(iElement.textContent)) {
+                    titleElement.removeChild(iElement);
+                 }
+              }
+            
+              // Ambil teks title tanpa elemen rating
+               const titleText = Array.from(titleElement.childNodes)
+                    .filter(node => node.nodeType === Node.TEXT_NODE || (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'DIV'))
+                    .map(node => node.textContent.trim())
+                    .join(' ');
+
+               seasontitle.push({
+                  title: titleText
+                });
+            });
+            
+            
+
             // mengambil episode 
             
             const episodeElements = document.querySelectorAll('div[class="episodiotitle"] a');
@@ -87,8 +114,8 @@ module.exports = async (req, res) => {
             const poster = posterElement ? posterElement.getAttribute('src') : 'N/A';
 
             // Mengambil title
-            const titleElement = document.querySelector('h1');
-            const title = titleElement ? titleElement.textContent.trim() : 'N/A';
+            const titlesElement = document.querySelector('h1');
+            const title = titlesElement ? titlesElement.textContent.trim() : 'N/A';
 
 
             // Membuat objek detail movie

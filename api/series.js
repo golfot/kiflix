@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
             
 
             // mengambil episode 
-            
+        
             const episodeElements = document.querySelectorAll('div[class="episodiotitle"] a');
             let episode = [];
 
@@ -101,6 +101,32 @@ module.exports = async (req, res) => {
                 
             });
 
+            
+            const castElements = document.querySelectorAll('div[class="person"]');
+            let cast = [];
+
+            castElements.forEach(element => {
+                    const caracter = element.querySelector('div.caracter') ? element.querySelector('div.caracter').textContent.trim() : 'N/A';
+                    const thumb = element.querySelector('img') ? element.querySelector('img').getAttribute('src') : 'N/A';
+                    const title = element.querySelector('img') ? element.querySelector('img').getAttribute('alt') : 'N/A';
+               
+
+                
+                    let slug = element.querySelector('div.name a') ? element.querySelector('div.name a').getAttribute('href') : 'N/A';
+                    // Menghapus bagian "https" dan domain dari slug menggunakan regex
+                    slug = slug.replace(/^https?:\/\/[^/]+/, '');
+                    // Menghapus simbol slash ('/') pertama dan terakhir dari slug
+                    slug = slug.replace(/^\/|\/$/g, '');
+                    cast.push({
+                        title: title,
+                        caracter: caracter,
+                        thumb: thumb,
+                        slug: slug
+                    });
+                
+            });
+
+
              // Mengambil Poster
             const posterElement = document.querySelector('div[class="poster"] img[itemprop="image"]');
             const poster = posterElement ? posterElement.getAttribute('src') : 'N/A';
@@ -117,6 +143,7 @@ module.exports = async (req, res) => {
                 simponis,
                 genre,
                 seasontitle,
+                cast,
                 episode
             };
 

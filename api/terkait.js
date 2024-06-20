@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     }
 
    
-    let url = `${targetUrl}${id}/`;
+    let url = `${targetUrl}${slug}/`;
 
     https.get(url, (response) => {
         let data = '';

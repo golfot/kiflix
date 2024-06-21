@@ -89,7 +89,9 @@ module.exports = async (req, res) => {
             episodeElements.forEach(element => {
                     const thumb = element.querySelector('div[class="imagen"] img') ? element.querySelector('div[class="imagen"] img').getAttribute('src') : 'N/A';
                     const title = element.querySelector('div[class="episodiotitle"] a') ? element.querySelector('div[class="episodiotitle"] a').textContent.trim() : 'N/A';
+                    const nomer = element.querySelector('div[class="numerando"]') ? element.querySelector('div[class="numerando"]').textContent.trim() : 'N/A';
                      
+                
                     let slug = element.querySelector('div[class="episodiotitle"] a') ? element.querySelector('div[class="episodiotitle"] a').getAttribute('href') : 'N/A';
                      // Menghapus bagian "https" dan domain dari slug menggunakan regex
                     slug = slug.replace(/^https?:\/\/[^/]+/, '');
@@ -98,6 +100,7 @@ module.exports = async (req, res) => {
                     episode.push({
                         thumb: thumb,
                         title: title,
+                        nomer: nomer,
                         slug: slug
                     });
                 

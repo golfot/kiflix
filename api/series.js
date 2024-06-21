@@ -83,7 +83,7 @@ module.exports = async (req, res) => {
 
             // mengambil episode 
         
-            const episodeElements = document.querySelectorAll('ul[class="episodios"]');
+            const episodeElements = document.querySelectorAll('ul[class="episodios"] li');
             let episode = [];
 
             episodeElements.forEach(element => {

@@ -83,14 +83,14 @@ module.exports = async (req, res) => {
 
             // mengambil episode 
         
-            const episodeElements = document.querySelectorAll('ul.episodios');
+            const episodeElements = document.querySelectorAll('ul[class="episodios"]');
             let episode = [];
 
             episodeElements.forEach(element => {
-                    const thumb = element.querySelector('img') ? element.querySelector('img').getAttribute('src') : 'N/A';
-                    const title = element.querySelector('a') ? element.querySelector('a').textContent.trim() : 'N/A';
+                    const thumb = element.querySelector('div[class="imagen"] img') ? element.querySelector('div[class="imagen"] img').getAttribute('src') : 'N/A';
+                    const title = element.querySelector('div[class="episodiotitle"] a') ? element.querySelector('div[class="episodiotitle"] a').textContent.trim() : 'N/A';
                      
-                    let slug = element.querySelector('a') ? element.querySelector('a').getAttribute('href') : 'N/A';
+                    let slug = element.querySelector('div[class="episodiotitle"] a') ? element.querySelector('div[class="episodiotitle"] a').getAttribute('href') : 'N/A';
                      // Menghapus bagian "https" dan domain dari slug menggunakan regex
                     slug = slug.replace(/^https?:\/\/[^/]+/, '');
                     // Menghapus simbol slash ('/') pertama dan terakhir dari slug

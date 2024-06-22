@@ -1,4 +1,4 @@
 // api/serverurl.js
 
-const targetUrl = 'https://tv.idlixofficial.net/';
+const targetUrl = 'https://vip.idlixplus.co/';
 module.exports = targetUrl;

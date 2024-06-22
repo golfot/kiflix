@@ -136,6 +136,11 @@ module.exports = async (req, res) => {
             const posterElement = document.querySelector('div[class="poster"] img[itemprop="image"]');
             const poster = posterElement ? posterElement.getAttribute('src') : 'N/A';
 
+            // Mengambil cover
+            const coverElement = document.querySelector('img.cover"]');
+            const cover = coverElement ? coverElement.getAttribute('src') : 'N/A';
+
+            
             // Mengambil title
             const titlesElement = document.querySelector('h1');
             const title = titlesElement ? titlesElement.textContent.trim() : 'N/A';
@@ -145,6 +150,7 @@ module.exports = async (req, res) => {
             const detailMovieObject = {
                 title,
                 poster,
+                cover,
                 simponis,
                 genre,
                 seasontitle,

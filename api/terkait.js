@@ -48,6 +48,8 @@ module.exports = async (req, res) => {
             articles.forEach(article => {
                 const poster = article.querySelector('img') ? article.querySelector('img').getAttribute('src') : 'N/A';
                 const title = article.querySelector('img') ? article.querySelector('img').getAttribute('alt') : 'N/A';
+                const rilis = article.querySelector('div[class="data"] span') ? article.querySelector('div[class="data"] span').textContent.trim() : 'N/A';
+               
                 let slug = article.querySelector('a') ? article.querySelector('a').getAttribute('href') : 'N/A';
 
                 const type = slug.includes('/tvseries/') ? 'tv' : 'movie';
@@ -63,6 +65,7 @@ module.exports = async (req, res) => {
                 results.push({
                     poster,
                     title,
+                    rilis,
                     slug,
                     type
                 });

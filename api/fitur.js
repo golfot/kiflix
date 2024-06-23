@@ -48,6 +48,9 @@ module.exports = async (req, res) => {
             articles.forEach(article => {
                 const poster = article.querySelector('div[class="poster"] img') ? article.querySelector('div[class="poster"] img').getAttribute('src') : 'N/A';
                 const title = article.querySelector('div[class="poster"] img') ? article.querySelector('div[class="poster"] img').getAttribute('alt') : 'N/A';
+                const rilis = article.querySelector('div[class="data dfeatur"] span') ? article.querySelector('div[class="data dfeatur"] span').textContent.trim() : 'N/A';
+                const rating = article.querySelector('div.rating') ? article.querySelector('div.rating').textContent.trim() : 'N/A';
+               
                 let slug = article.querySelector('div[class="poster"] a') ? article.querySelector('div[class="poster"] a').getAttribute('href') : 'N/A';
 
                 const type = slug.includes('/tvseries/') ? 'tv' : 'movie';
@@ -63,6 +66,8 @@ module.exports = async (req, res) => {
                 results.push({
                     poster,
                     title,
+                    rilis,
+                    rating,
                     slug,
                     type
                 });

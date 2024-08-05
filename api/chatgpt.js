@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 const API_URL = 'https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit';
 const HEADERS = {
-  'x-wp-nonce': '2833f0fab7',
+  'x-wp-nonce': '48b351b426',
   'Content-Type': 'application/json',
   'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36'
 };

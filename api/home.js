@@ -17,7 +17,7 @@ const generateRandomClientToken = () => {
 const API_URL_ADD = 'https://chatgpt.org.ua/api/?action=add_question';
 const API_URL_CHECK = 'https://chatgpt.org.ua/api/?action=check_answer';
 const HEADERS = {
-  'Content-Type': 'application/x-www-form-urlencoded',
+  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
   'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36'
 };
 

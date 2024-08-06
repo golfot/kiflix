@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
 
   try {
     const prompt = req.query.cek || '';
-     const body = `question_hash=${encodeURIComponent(prompt)}&bfp_hash=277174405&lang=en`;
+     const body = `question_hash=${prompt}&bfp_hash=277174405&lang=en`;
 
     const response = await fetch(API_URL, {
       method: 'POST',

@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     });
 
     const data = await response.json();
-    const replyData = data.answer_text || 'Bot tidak bisa mengecek pesan ini';
+    const replyData = data.data.answer_text || 'Bot tidak bisa mengecek pesan ini';
 
     res.status(200).send(replyData);
 

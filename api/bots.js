@@ -3,7 +3,8 @@ const FormData = require('form-data');
 
 const API_URL = 'https://api-web.chaton.ai/v1/chats/message';
 const HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36'
+  'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36',
+  'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryln8oFqjXmC1OjJRD'
 };
 
 module.exports = async (req, res) => {

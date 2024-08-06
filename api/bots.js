@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
       }
 
       // Cek pesan
-      const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${encodeURIComponent(pesanText)}`);
+      const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${pesanText}`);
       const cekhasilnya = await cekResponse.text(); // Mengambil respons sebagai teks
 
       res.status(200).send(cekhasilnya);

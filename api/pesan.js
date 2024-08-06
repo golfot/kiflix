@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const prompt = req.query.isi || 'hi';
+    const prompt = req.query.isipesan || 'hi';
     const randomClientToken = generateRandomClientToken();
     const body = `question=${encodeURIComponent(prompt)}&bfp_hash=277174405&client_token=${randomClientToken}`;
 

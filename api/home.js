@@ -1,18 +1,16 @@
 const fetch = require('node-fetch');
 
-// Fungsi untuk menghasilkan IP acak
+// Fungsi untuk menghasilkan IP dengan perubahan satu angka
 const generateRandomIP = () => {
-  return `${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`;
+  const randomNum = Math.floor(Math.random() * 10);
+  return `103.30.1${randomNum}.154`;
 };
 
-// Fungsi untuk menghasilkan token klien acak
+// Fungsi untuk menghasilkan token klien dengan perubahan satu huruf
 const generateRandomClientToken = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
-  for (let i = 0; i < 32); i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return token;
+  const randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
+  return `UljdP0yvivhhi2m${randomChar}D20e4X5kEXntvyWJ`;
 };
 
 // URL API dan headers

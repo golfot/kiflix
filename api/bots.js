@@ -13,9 +13,9 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
     try {
-      const isipesan = req.body.isipesan || '';
+      const isipesan = req.query.isipesan || '';
 
       // Kirim pesan
       const pesanResponse = await fetch(`${PESAN_API_URL}?isipesan=${encodeURIComponent(isipesan)}`);
@@ -23,12 +23,9 @@ module.exports = async (req, res) => {
 
       // Cek pesan
       const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${pesanText}`);
-      const cekhasilnya = await cekResponse.text(); // Mengambil respons sebagai text juga
-      
-      // Mengakses teks dari JSON
-      const cekText = cekhasilnya.text || 'No text found';
+      const cekhasilnya = await cekResponse.text(); // Mengambil respons sebagai teks
 
-      res.status(200).send(cekText);
+      res.status(200).send(cekhasilnya);
 
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });

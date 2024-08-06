@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
   try {
     const prompt = req.query.isi || 'hi';
     const randomClientToken = generateRandomClientToken();
-    const bodyAdd = `question=${encodeURIComponent(prompt)}&bfp_hash=277174405&ip=103.30.11.154&client_token=${randomClientToken}`;
+    const bodyAdd = `question=${encodeURIComponent(prompt)}&bfp_hash=277174405&client_token=${randomClientToken}`;
 
     // Panggilan API pertama ke add_question
     const responseAdd = await fetch(API_URL_ADD, {
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
     const questionHash = dataAdd.data;
 
     // Persiapkan body untuk API check_answer dengan IP yang sama
-    const bodyCheck = `question_hash=${questionHash}&bfp_hash=277174405&ip=103.30.11.154&lang=en`;
+    const bodyCheck = `question_hash=${questionHash}&bfp_hash=277174405&lang=en`;
 
     // Panggilan API kedua ke check_answer
     const responseCheck = await fetch(API_URL_CHECK, {

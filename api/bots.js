@@ -2,10 +2,6 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 
 const API_URL = 'https://chatgptfree.onl/wp-admin/admin-ajax.php';
-const HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36',
-  'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryln8oFqjXmC1OjJRD'
-};
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,12 +27,14 @@ module.exports = async (req, res) => {
     form.append('wpaicg_chat_client_id', 'MKEOkxageh');
     form.append('wpaicg_chat_history', '["Human: hay"]');
 
+    const HEADERS = {
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36',
+      ...form.getHeaders()
+    };
+
     const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        ...HEADERS,
-        ...form.getHeaders()
-      },
+      headers: HEADERS,
       body: form
     });
 

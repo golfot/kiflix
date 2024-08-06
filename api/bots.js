@@ -1,7 +1,10 @@
 const fetch = require('node-fetch');
+const FormData = require('form-data');
 
-const PESAN_API_URL = 'https://kiflix.vercel.app/api/pesan';
-const CEK_PESAN_API_URL = 'https://kiflix.vercel.app/api/cekpesan';
+const API_URL = 'https://api-web.chaton.ai/v1/chats/message';
+const HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36'
+};
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,35 +16,35 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (req.method === 'GET') {
-    try {
-      const isipesan = req.query.isipesan || '';
+  try {
+    const prompt = req.query.isi || 'hi';
 
-      if (!isipesan) {
-        res.status(400).json({ error: 'Parameter "isipesan" is required' });
-        return;
-      }
+    const form = new FormData();
+    form.append('_wpnonce', 'e60b10a315');
+    form.append('post_id', '221');
+    form.append('url', 'https://chatgptfree.onl');
+    form.append('action', 'wpaicg_chat_shortcode_message');
+    form.append('message', prompt);
+    form.append('bot_id', '0');
+    form.append('chatbot_identity', 'shortcode');
+    form.append('wpaicg_chat_client_id', 'MKEOkxageh');
+    form.append('wpaicg_chat_history', '["Human: hay"]');
 
-      // Kirim pesan
-      const pesanResponse = await fetch(`${PESAN_API_URL}?isipesan=${encodeURIComponent(isipesan)}`);
-      const pesanText = await pesanResponse.text(); // Mengambil respons sebagai teks
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        ...HEADERS,
+        ...form.getHeaders()
+      },
+      body: form
+    });
 
-      // Jika tidak ada teks dari respons pesan, tangani kesalahan
-      if (!pesanText) {
-        res.status(500).json({ error: 'Failed to get response from PESAN_API_URL' });
-        return;
-      }
+    const data = await response.json();
+    const replyText = data.data || 'No reply received';
 
-      // Cek pesan
-      const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${pesanText}`);
-      const cekhasilnya = await cekResponse.text(); // Mengambil respons sebagai teks
+    res.status(200).send(replyText);
 
-      res.status(200).send(cekhasilnya);
-
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+  } catch (error) {
+    res.status(500).send({ error: 'An error occurred' });
   }
 };

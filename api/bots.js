@@ -17,12 +17,23 @@ module.exports = async (req, res) => {
     try {
       const isipesan = req.query.isipesan || '';
 
+      if (!isipesan) {
+        res.status(400).json({ error: 'Parameter "isipesan" is required' });
+        return;
+      }
+
       // Kirim pesan
       const pesanResponse = await fetch(`${PESAN_API_URL}?isipesan=${encodeURIComponent(isipesan)}`);
       const pesanText = await pesanResponse.text(); // Mengambil respons sebagai teks
 
+      // Jika tidak ada teks dari respons pesan, tangani kesalahan
+      if (!pesanText) {
+        res.status(500).json({ error: 'Failed to get response from PESAN_API_URL' });
+        return;
+      }
+
       // Cek pesan
-      const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${pesanText}`);
+      const cekResponse = await fetch(`${CEK_PESAN_API_URL}?cek=${encodeURIComponent(pesanText)}`);
       const cekhasilnya = await cekResponse.text(); // Mengambil respons sebagai teks
 
       res.status(200).send(cekhasilnya);

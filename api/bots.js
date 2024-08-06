@@ -1,6 +1,18 @@
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
+// Fungsi untuk menghasilkan huruf acak
+function getRandomChar() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  return chars.charAt(Math.floor(Math.random() * chars.length));
+}
+
+// Fungsi untuk mengganti satu karakter dalam string
+function getRandomizedClientId(clientId) {
+  const randomIndex = Math.floor(Math.random() * clientId.length);
+  return clientId.slice(0, randomIndex) + getRandomChar() + clientId.slice(randomIndex + 1);
+}
+
 const API_URL = 'https://chatgptfree.onl/wp-admin/admin-ajax.php';
 
 module.exports = async (req, res) => {
@@ -24,7 +36,12 @@ module.exports = async (req, res) => {
     form.append('message', prompt);
     form.append('bot_id', '0');
     form.append('chatbot_identity', 'shortcode');
-    form.append('wpaicg_chat_client_id', 'MKEOkxageh');
+    
+    // Mengganti salah satu huruf pada wpaicg_chat_client_id dengan karakter acak
+    const clientId = 'MKEOkxageh';
+    const randomizedClientId = getRandomizedClientId(clientId);
+    form.append('wpaicg_chat_client_id', randomizedClientId);
+    
     form.append('wpaicg_chat_history', '["Human: hay"]');
 
     const HEADERS = {

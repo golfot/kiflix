@@ -28,7 +28,6 @@ module.exports = async (req, res) => {
 
   try {
     const prompt = req.query.isi || 'hi';
-    const randomIP = generateRandomIP();
     const randomClientToken = generateRandomClientToken();
     const bodyAdd = `question=${encodeURIComponent(prompt)}&bfp_hash=277174405&ip=103.30.11.154&client_token=${randomClientToken}`;
 

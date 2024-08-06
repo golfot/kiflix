@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
     const answerText = dataCheck.data.answer_text;
 
     // Kirim jawaban kembali ke klien
-    res.status(200).json({ answer: answerText });
+    res.status(200).send(answerText)
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

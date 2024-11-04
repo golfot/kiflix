@@ -1,94 +1,83 @@
-const fetch = require('node-fetch');
-const FormData = require('form-data');
 const https = require('https');
-const { JSDOM } = require('jsdom');
-
-// Fungsi untuk menghasilkan huruf acak
-function getRandomChar() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  return chars.charAt(Math.floor(Math.random() * chars.length));
-}
-
-// Fungsi untuk mengganti satu karakter dalam string
-function getRandomizedClientId(clientId) {
-  const randomIndex = Math.floor(Math.random() * clientId.length);
-  return clientId.slice(0, randomIndex) + getRandomChar() + clientId.slice(randomIndex + 1);
-}
-
-const API_URL = 'https://chatgptfree.onl/wp-admin/admin-ajax.php';
-const TARGET_URL = 'https://chatgptfree.onl/';
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+const targetUrl = require('./targeturl');
 
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // Menambahkan header CORS ke dalam respons
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+    // Mengatasi preflight request (OPTIONS)
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
 
-  try {
-    const prompt = req.query.isi || 'hi';
+    // Mengambil nilai parameter slugs dari permintaan
+    const slug = req.query.slug || '';
 
-    // Ambil data nonce dari halaman target
-    const nonce = await new Promise((resolve, reject) => {
-      https.get(TARGET_URL, (resp) => {
-        let data = '';
+    // Memeriksa apakah parameter slugs telah diberikan
+    if (!slug) {
+        res.status(400).json({ error: 'Parameter slug tidak ditemukan' });
+        return;
+    }
+    
+    // Memisahkan slug menjadi array
+    const slugArray = slug.split(',');
 
-        // A chunk of data has been received.
-        resp.on('data', (chunk) => {
-          data += chunk;
+    // Menyiapkan array untuk menyimpan hasil dari setiap slug
+    const results = [];
+
+    // Loop melalui setiap slug dan ambil data dari server
+    for (const slugs of slugArray) {
+        const urls = [
+            `${targetUrl}${slugs}/`,
+            `${targetUrl}${slugs}/?player=2`,
+            `${targetUrl}${slugs}/?player=3`,
+            `${targetUrl}${slugs}/?player=4`
+        ];
+
+        const promises = urls.map(url => {
+            return new Promise((resolve, reject) => {
+                https.get(url, (response) => {
+                    let data = '';
+
+                    // Mengumpulkan data yang diterima
+                    response.on('data', (chunk) => {
+                        data += chunk;
+                    });
+
+                    // Proses data setelah selesai diterima
+                    response.on('end', () => {
+                        const dom = new JSDOM(data);
+                        const document = dom.window.document;
+
+                        // Mengambil URL dari elemen iframe
+                        const iframeElement = document.querySelector('iframe');
+                        const urlstream = iframeElement ? iframeElement.getAttribute('src') : 'N/A';
+
+                        // Push objek detail movie ke dalam array results
+                        results.push({ urlstream });
+
+                        resolve();
+                    });
+
+                }).on('error', (err) => {
+                    reject(err);
+                });
+            });
         });
 
-        // The whole response has been received.
-        resp.on('end', () => {
-          const dom = new JSDOM(data);
-          const nonceElement = dom.window.document.querySelector('div[class="wpaicg-chat-shortcode"]');
-          if (nonceElement && nonceElement.dataset.nonce) {
-            resolve(nonceElement.dataset.nonce);
-          } else {
-            reject('Nonce not found');
-          }
-        });
-      }).on('error', (err) => {
-        reject(`Error fetching nonce: ${err.message}`);
-      });
-    });
+        try {
+            await Promise.all(promises);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+            return;
+        }
+    }
 
-    const form = new FormData();
-    form.append('_wpnonce', nonce);
-    form.append('post_id', '221');
-    form.append('url', 'https://chatgptfree.onl');
-    form.append('action', 'wpaicg_chat_shortcode_message');
-    form.append('message', prompt);
-    form.append('bot_id', '0');
-    form.append('chatbot_identity', 'shortcode');
-    
-    // Mengganti salah satu huruf pada wpaicg_chat_client_id dengan karakter acak
-    const clientId = 'MKEOkxageh';
-    const randomizedClientId = getRandomizedClientId(clientId);
-    form.append('wpaicg_chat_client_id', randomizedClientId);
-    
-    form.append('wpaicg_chat_history', '["Human: hay"]');
-
-    const HEADERS = {
-      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi Note 7 Build/QKQ1.190910.002) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.188 Mobile Safari/537.36',
-      ...form.getHeaders()
-    };
-
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: form
-    });
-
-    const data = await response.json();
-    const replyText = data.data || 'No reply received';
-
-    res.status(200).send(replyText);
-
-  } catch (error) {
-    res.status(500).send({ error: `An error occurred: ${error.message}` });
-  }
+    // Mengirim hasil sebagai respons
+    res.status(200).json(results);
 };

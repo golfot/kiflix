@@ -14,12 +14,12 @@ module.exports = async (req, res) => {
         res.status(200).end();
         return;
     }
-    
+
     // Mengambil nilai parameter categori, country, genre, dan page dari permintaan
     const categori = req.query.categori || '';
     const country = req.query.country || '';
     const genre = req.query.genre || '';
-    const page = req.query.page || 1; // Nilai default halaman adalah 1
+    const page = req.query.page ? `/page/${req.query.page}/` : '';
 
     // Memeriksa apakah salah satu dari parameter telah diberikan
     if (!categori && !country && !genre) {
@@ -30,11 +30,11 @@ module.exports = async (req, res) => {
     // Tentukan URL berdasarkan parameter yang diberikan
     let url = '';
     if (categori) {
-        url = `${targetUrl}category/${categori}/page/${page}/`;
+        url = `${targetUrl}category/${categori}${page}`;
     } else if (country) {
-        url = `${targetUrl}country/${country}/page/${page}/`;
+        url = `${targetUrl}country/${country}${page}`;
     } else if (genre) {
-        url = `${targetUrl}genre/${genre}/page/${page}/`;
+        url = `${targetUrl}genre/${genre}${page}`;
     }
 
     https.get(url, (response) => {

@@ -53,7 +53,12 @@ module.exports = async (req, res) => {
             let results = [];
 
             articles.forEach(article => {
-                const poster = article.querySelector('img') ? article.querySelector('img').getAttribute('src') : 'N/A';
+                // Ambil URL poster dan hapus bagian '-152x228' jika ada
+                let poster = article.querySelector('img') ? article.querySelector('img').getAttribute('src') : 'N/A';
+                if (poster.includes('-152x228')) {
+                    poster = poster.replace('-152x228', '');
+                }
+
                 const title = article.querySelector('h2') ? article.querySelector('h2').textContent.trim() : 'N/A';
                 const tailer = article.querySelector('article div.gmr-popup-button a') ? article.querySelector('article div.gmr-popup-button a').getAttribute('href') : 'N/A';
 

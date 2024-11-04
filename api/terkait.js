@@ -17,17 +17,17 @@ module.exports = async (req, res) => {
     
     
     // Mengambil nilai parameter slugs dan server dari permintaan
-    const slug = req.query.slug || '';
+    const categori = req.query.categori || '';
 
 
     // Memeriksa apakah parameter slugs dan server telah diberikan
-    if (!slug) {
-        res.status(400).json({ error: 'Parameter slug tidak ditemukan' });
+    if (!categori) {
+        res.status(400).json({ error: 'Parameter kategori tidak ditemukan' });
         return;
     }
 
    
-    let url = `${targetUrl}${slug}/`;
+    let url = `${targetUrl}category/${categori}/`;
 
     https.get(url, (response) => {
         let data = '';
@@ -42,17 +42,17 @@ module.exports = async (req, res) => {
             const dom = new JSDOM(data);
             const document = dom.window.document;
 
-            const articles = document.querySelectorAll('div[id="single_relacionados"] article');
+            const articles = document.querySelectorAll('article');
             let results = [];
 
             articles.forEach(article => {
                 const poster = article.querySelector('img') ? article.querySelector('img').getAttribute('src') : 'N/A';
-                const title = article.querySelector('img') ? article.querySelector('img').getAttribute('alt') : 'N/A';
-                const rilis = article.querySelector('div[class="data"] span') ? article.querySelector('div[class="data"] span').textContent.trim() : 'N/A';
+                const title = article.querySelector('h2') ? article.querySelector('h2').textContent.trim() : 'N/A';
+                const tailer = article.querySelector('article div.gmr-popup-button a') ? article.querySelector('article div.gmr-popup-button a').getAttribute('href') : 'N/A';
                
-                let slug = article.querySelector('a') ? article.querySelector('a').getAttribute('href') : 'N/A';
+                let slug = article.querySelector('div.item-article h2 a') ? article.querySelector('div.item-article h2 a').getAttribute('href') : 'N/A';
 
-                const type = slug.includes('/tvseries/') ? 'tv' : 'movie';
+                const type = slug.includes('/tv/') ? 'tv' : 'movie';
                 
                 // Menghapus bagian "https" dan domain dari slug menggunakan regex
                 slug = slug.replace(/^https?:\/\/[^/]+/, '');
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
                 results.push({
                     poster,
                     title,
-                    rilis,
+                    tailer,
                     slug,
                     type
                 });

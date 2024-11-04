@@ -3,7 +3,6 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const targetUrl = require('./targeturl');
 
-
 module.exports = async (req, res) => {
     // Menambahkan header CORS ke dalam respons
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -78,9 +77,11 @@ module.exports = async (req, res) => {
             const episodes = [];
             const episodeElements = document.querySelectorAll('div.gmr-listseries a.button.button-shadow:not(.active)');
             episodeElements.forEach(episode => {
+                // Menggunakan regex untuk memotong seluruh domain dari slug
+                const episodeSlug = episode.href.replace(/^https?:\/\/[^\/]+/, '');
                 episodes.push({
                     episode: episode.textContent.trim(),
-                    slug: episode.href
+                    slug: episodeSlug
                 });
             });
 

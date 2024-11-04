@@ -78,10 +78,15 @@ module.exports = async (req, res) => {
             const episodeElements = document.querySelectorAll('div.gmr-listseries a.button.button-shadow:not(.active)');
             episodeElements.forEach(episode => {
                 // Menggunakan regex untuk memotong domain dan menjaga format slug
-                const episodeSlug = episode.href.replace(/^https?:\/\/[^\/]+/, '').replace(/\/$/, '') + '/';
+                let slug = episode.getAttribute('href').trim();
+                
+                slug = slug.replace(/^https?:\/\/[^/]+/, '');
+                    // Menghapus simbol slash ('/') pertama dan terakhir dari slug
+                slug = slug.replace(/^\/|\/$/g, '');
+                
                 episodes.push({
                     episode: episode.textContent.trim(),
-                    slug: episodeSlug
+                    slug: slug
                 });
             });
 

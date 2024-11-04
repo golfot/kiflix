@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     // Mengambil nilai parameter categori, country, genre, dan page dari permintaan
     const categori = req.query.categori || '';
     const country = req.query.country || '';
-    const genre = req.query.genre || '';
+    const genre = req.query.network || '';
     const page = req.query.page ? `/page/${req.query.page}/` : '/'; // Set default ke /page/1/
 
     // Memeriksa apakah salah satu dari parameter telah diberikan
@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
     } else if (country) {
         url = `${targetUrl}country/${country}${page}`;
     } else if (genre) {
-        url = `${targetUrl}genre/${genre}${page}`;
+        url = `${targetUrl}network/${genre}${page}`;
     }
 
     https.get(url, (response) => {

@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
         return;
     }
 
-    const url = `${targetUrl}${movieSlug}`;
+    const url = `${targetUrl}${movieSlug}/`;
 
     https.get(url, (response) => {
         let data = '';

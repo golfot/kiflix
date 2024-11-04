@@ -8,9 +8,9 @@ export default function handler(req, res) {
     }
 
     const options = {
-        url: url,
+        url: url, // Menggunakan URL asli dari parameter
         headers: {
-            'Referer': 'https://viral.dutamovie21.cloud/', // Referer yang valid
+            'Referer': 'https://viral.dutamovie21.cloud/', // Set referer ke domain yang Anda inginkan
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36' // User-Agent yang umum
         }
     };
@@ -19,7 +19,7 @@ export default function handler(req, res) {
         if (error) {
             return res.status(500).json({ error: 'Error fetching the video' });
         }
-        res.setHeader('Content-Type', 'text/html'); // Atur tipe konten
+        res.setHeader('Content-Type', response.headers['content-type']); // Atur tipe konten berdasarkan respons asli
         res.send(body); // Kirimkan konten ke klien
     });
 }

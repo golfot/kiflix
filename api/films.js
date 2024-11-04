@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     const categori = req.query.categori || '';
     const country = req.query.country || '';
     const genre = req.query.genre || '';
-    const page = req.query.page ? `/page/${req.query.page}/` : '';
+    const page = req.query.page ? `/page/${req.query.page}/` : '/'; // Set default ke /page/1/
 
     // Memeriksa apakah salah satu dari parameter telah diberikan
     if (!categori && !country && !genre) {

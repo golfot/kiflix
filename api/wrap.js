@@ -22,7 +22,7 @@ console.log("Telegram : @godTspeed");
 console.log("Telegram : @godspeedmode");
 console.log("");
 
-// Fungsi pembantu
+// Helper functions
 const genString = (length) => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -33,9 +33,13 @@ const digitString = (length) => {
     return Array.from({ length }, () => digits[Math.floor(Math.random() * digits.length)]).join('');
 };
 
-// Fungsi utama untuk mengirim permintaan
+// Main function
 async function sendRequest(req, res) {
-    const WARP_CLIENT_ID = "AUTOMATIC_CLIENT_ID";  // Ganti dengan ID client Anda atau dapatkan dari variabel lain.
+    const WARP_CLIENT_ID = req.query.clientId;
+    if (!WARP_CLIENT_ID) {
+        res.status(400).json({ error: "Please provide WARP client ID as a query parameter." });
+        return;
+    }
 
     const url = `https://api.cloudflareclient.com/v0a${digitString(3)}/reg`;
 
@@ -70,9 +74,9 @@ async function sendRequest(req, res) {
 
         response.on('end', () => {
             if (response.statusCode === 200) {
-                res.status(200).json({ message: "BERHASIL: +1GB ditambahkan", data: JSON.parse(data) });
+                res.status(200).json({ message: "PASSED: +1GB added", data: JSON.parse(data) });
             } else {
-                res.status(response.statusCode).json({ error: "GAGAL", statusCode: response.statusCode });
+                res.status(response.statusCode).json({ error: "FAILED", statusCode: response.statusCode });
             }
         });
     });
@@ -86,11 +90,11 @@ async function sendRequest(req, res) {
     request.end();
 }
 
-// Ekspor untuk Vercel
+// Vercel-compatible export
 module.exports = (req, res) => {
     if (req.method === 'GET') {
         sendRequest(req, res);
     } else {
-        res.status(405).json({ error: "Hanya menerima permintaan GET" });
+        res.status(405).json({ error: "Only GET requests are allowed" });
     }
 };

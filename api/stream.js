@@ -39,7 +39,10 @@ module.exports = async (req, res) => {
             `${targetUrl}${slugs}/?player=4`
         ];
 
-        const promises = urls.map(url => {
+        // Siapkan array untuk menyimpan hasil berdasarkan urutan player
+        const playerResults = Array(urls.length);
+
+        const promises = urls.map((url, index) => {
             return new Promise((resolve, reject) => {
                 https.get(url, (response) => {
                     let data = '';
@@ -58,8 +61,11 @@ module.exports = async (req, res) => {
                         const iframeElement = document.querySelector('iframe');
                         const urlstream = iframeElement ? iframeElement.getAttribute('src') : 'N/A';
 
-                        // Push objek detail movie ke dalam array results
-                        results.push({ urlstream });
+                        // Menyimpan hasil ke dalam urutan yang benar berdasarkan indeks
+                        playerResults[index] = {
+                            name: `server ${index + 1}`,
+                            urlstream
+                        };
 
                         resolve();
                     });
@@ -72,6 +78,8 @@ module.exports = async (req, res) => {
 
         try {
             await Promise.all(promises);
+            // Gabungkan hasil untuk setiap slug ke dalam `results`
+            results.push(...playerResults);
         } catch (error) {
             res.status(500).json({ error: error.message });
             return;

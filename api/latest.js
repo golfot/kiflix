@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
     const currentYear = new Date().getFullYear();
     const url1 = `${targetUrl}year/${currentYear}/`;
     const url2 = `${targetUrl}year/${currentYear}/page/2/`;
+    const url3 = `${targetUrl}year/${currentYear}/page/3/`;  // Menambahkan halaman ketiga
 
     // Menentukan filter type dari query parameter
     const filterType = req.query.type; // Nilainya bisa 'movie', 'tv', atau undefined
@@ -88,11 +89,11 @@ module.exports = async (req, res) => {
     };
 
     try {
-        // Memuat data dari kedua halaman
-        const [dataPage1, dataPage2] = await Promise.all([fetchData(url1), fetchData(url2)]);
+        // Memuat data dari ketiga halaman
+        const [dataPage1, dataPage2, dataPage3] = await Promise.all([fetchData(url1), fetchData(url2), fetchData(url3)]);
         
-        // Menggabungkan data dari kedua halaman
-        const combinedResults = [...dataPage1, ...dataPage2];
+        // Menggabungkan data dari ketiga halaman
+        const combinedResults = [...dataPage1, ...dataPage2, ...dataPage3];
 
         // Mengirim respons JSON dengan data yang digabungkan
         res.status(200).json(combinedResults);

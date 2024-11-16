@@ -89,10 +89,50 @@ module.exports = async (req, res) => {
                 }
             });
 
+            // Ambil data film terkait
+            const articles = document.querySelectorAll('article[class="item col-md-20"]');
+            const movieterkait = [];
+
+            articles.forEach((article) => {
+                // Ambil URL poster dan hapus bagian '-152x228' jika ada
+                let poster = article.querySelector('img') ? article.querySelector('img').getAttribute('src') : 'N/A';
+                if (poster.includes('-152x228')) {
+                    poster = poster.replace('-152x228', '');
+                }
+
+                const title = article.querySelector('h2') ? article.querySelector('h2').textContent.trim() : 'N/A';
+                const tailer = article.querySelector('div.gmr-popup-button a') ? article.querySelector('div.gmr-popup-button a').getAttribute('href') : 'N/A';
+
+                let slug = article.querySelector('div.item-article h2 a') ? article.querySelector('div.item-article h2 a').getAttribute('href') : 'N/A';
+                const type = slug.includes('/tv/') ? 'tv' : 'movie';
+
+                // Mengatur nilai episode
+                const episode = type === 'tv' 
+                    ? (article.querySelector('div.gmr-numbeps') ? article.querySelector('div.gmr-numbeps').textContent.trim() : 'N/A')
+                    : 'N/A';
+
+                // Menghapus bagian "https" dan domain dari slug menggunakan regex
+                slug = slug.replace(/^https?:\/\/[^/]+/, '');
+                
+                // Menghapus simbol slash ('/') pertama dan terakhir dari slug
+                slug = slug.replace(/^\/|\/$/g, '');
+                
+                // Menambahkan data ke movieterkait
+                movieterkait.push({
+                    poster,
+                    title,
+                    tailer,
+                    slug,
+                    type,
+                    episode
+                });
+            });
+
             res.status(200).json({
                 title,
                 synopsis,
-                details
+                details,
+                movieterkait
             });
         });
     }).on('error', (err) => {

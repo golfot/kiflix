@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
     // Menambahkan logika untuk parameter page, default ke '/page/1/'
     const page = req.query.page ? `/page/${req.query.page}/` : '/';
 
-    const url1 = `${targetUrl}year/${year}${page}/`;
+    const url1 = `${targetUrl}year/${year}${page}`;
 
     // Menentukan filter type dari query parameter
     const filterType = req.query.type; // Nilainya bisa 'movie', 'tv', atau undefined

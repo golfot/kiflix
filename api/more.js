@@ -15,18 +15,30 @@ module.exports = async (req, res) => {
         return;
     }
 
-    // Memeriksa apakah parameter 'year' telah diberikan
-    if (!req.query.year) {
-        res.status(400).json({ error: 'Parameter tahun tidak ditemukan, contoh /year/2024' });
+    // Memeriksa apakah parameter yang dibutuhkan ada
+    if (!req.query.year && !req.query.category && !req.query.country && !req.query.network) {
+        res.status(400).json({ error: 'Parameter year, category, country, atau network tidak ditemukan' });
         return;
     }
 
-    const year = req.query.year;
+    // Menentukan parameter apa yang digunakan
+    const { year, category, country, network, page } = req.query;
 
     // Menambahkan logika untuk parameter page, default ke '/page/1/'
-    const page = req.query.page ? `/page/${req.query.page}/` : '/';
+    const pageParam = page ? `/page/${page}/` : '/';
 
-    const url1 = `${targetUrl}year/${year}${page}`;
+    let url1;
+
+    // Menentukan URL berdasarkan parameter yang ada
+    if (year) {
+        url1 = `${targetUrl}year/${year}${pageParam}`;
+    } else if (category) {
+        url1 = `${targetUrl}category/${category}${pageParam}`;
+    } else if (country) {
+        url1 = `${targetUrl}country/${country}${pageParam}`;
+    } else if (network) {
+        url1 = `${targetUrl}network/${network}${pageParam}`;
+    }
 
     // Menentukan filter type dari query parameter
     const filterType = req.query.type; // Nilainya bisa 'movie', 'tv', atau undefined
@@ -97,7 +109,7 @@ module.exports = async (req, res) => {
     };
 
     try {
-        // Memuat data dari halaman yang sesuai dengan year dan page
+        // Memuat data dari URL yang sesuai dengan parameter yang diterima
         const dataPage1 = await fetchData(url1);
 
         // Mengirim respons JSON dengan data yang diterima

@@ -11,12 +11,12 @@ function decryptAES(encryptedText, key, iv) {
 
 // Fungsi untuk mengambil data dari API
 async function fetchData() {
-  const url = 'https://tv.idlix.asia/wp-admin/admin-ajax.php';
+  const url = 'https://tv2.idlix.asia/wp-admin/admin-ajax.php';
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Accept': '*/*',
-    'Origin': 'https://tv.idlix.asia',
-    'Referer': 'https://tv.idlix.asia/movie/apocalypse-z-the-beginning-of-the-end-2024/'
+    'Origin': 'https://tv2.idlix.asia',
+    'Referer': 'https://tv2.idlix.asia/movie/apocalypse-z-the-beginning-of-the-end-2024/'
   };
 
   const body = new URLSearchParams({

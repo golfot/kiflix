@@ -44,6 +44,10 @@ module.exports = async (req, res) => {
             // Mengambil sinopsis (paragraf pertama)
             const synopsis = document.querySelectorAll('p')[0] ? document.querySelectorAll('p')[0].textContent.trim() : 'N/A';
 
+            const trailer = document.querySelector('iframe') 
+    ? document.querySelector('iframe').getAttribute('src').trim() 
+    : 'N/A';
+
             // Mengambil detail film
             const details = {};
             const detailElements = document.querySelectorAll('div.gmr-moviedata');
@@ -99,6 +103,7 @@ module.exports = async (req, res) => {
             res.status(200).json({
                 title,
                 synopsis,
+                trailer,
                 details,
                 episodes
             });

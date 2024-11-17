@@ -54,7 +54,9 @@ module.exports = async (req, res) => {
                 
                 switch (label) {
                     case 'genre':
-                        details.genre = Array.from(element.querySelectorAll('a')).map(genre => genre.textContent.trim());
+                        details.genre = Array.from(element.querySelectorAll('a')).map(genre => ({
+                            name: genre.textContent.trim()
+                        }));
                         break;
                     case 'quality':
                         details.quality = element.querySelector('a') ? element.querySelector('a').textContent.trim() : 'N/A';

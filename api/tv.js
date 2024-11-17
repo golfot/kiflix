@@ -51,7 +51,9 @@ module.exports = async (req, res) => {
                 const label = detail.querySelector('strong') ? detail.querySelector('strong').textContent.trim() : '';
 
                 if (label === 'Genre:') {
-                    details.genre = Array.from(detail.querySelectorAll('a')).map(a => a.textContent.trim());
+                    details.genre = Array.from(detail.querySelectorAll('a')).map(a => ({
+                        name: a.textContent.trim()
+                    }));
                 } else if (label === 'Quality:') {
                     details.quality = detail.querySelector('a') ? detail.querySelector('a').textContent.trim() : 'N/A';
                 } else if (label === 'Year:') {

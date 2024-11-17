@@ -45,6 +45,10 @@ module.exports = async (req, res) => {
                 ? document.querySelectorAll('p')[0].textContent.trim()
                 : 'N/A';
 
+            const trailer = document.querySelector('a[class=gmr-trailer-popup]') 
+    ? document.querySelector('a[class=gmr-trailer-popup]').getAttribute('href').trim() 
+    : 'N/A';
+
             // Ambil data detail film
             const details = {};
             const detailElements = document.querySelectorAll('div.gmr-moviedata');
@@ -133,6 +137,7 @@ module.exports = async (req, res) => {
             res.status(200).json({
                 title,
                 synopsis,
+                trailer,
                 details,
                 movieterkait
             });

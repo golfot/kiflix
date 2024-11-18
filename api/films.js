@@ -15,15 +15,16 @@ module.exports = async (req, res) => {
         return;
     }
 
-    // Mengambil nilai parameter categori, country, genre, dan page dari permintaan
+    // Mengambil nilai parameter categori, country, genre, year, dan page dari permintaan
     const categori = req.query.categori || '';
     const country = req.query.country || '';
     const genre = req.query.network || '';
+    const year = req.query.year || '';
     const page = req.query.page ? `/page/${req.query.page}/` : '/'; // Set default ke /page/1/
 
     // Memeriksa apakah salah satu dari parameter telah diberikan
-    if (!categori && !country && !genre) {
-        res.status(400).json({ error: 'Parameter kategori, country, atau genre tidak ditemukan' });
+    if (!categori && !country && !genre && !year) {
+        res.status(400).json({ error: 'Parameter kategori, country, genre, atau year tidak ditemukan' });
         return;
     }
 
@@ -35,6 +36,8 @@ module.exports = async (req, res) => {
         url = `${targetUrl}country/${country}${page}`;
     } else if (genre) {
         url = `${targetUrl}network/${genre}${page}`;
+    } else if (year) {
+        url = `${targetUrl}year/${year}${page}`;
     }
 
     https.get(url, (response) => {

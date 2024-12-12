@@ -1,5 +1,5 @@
-const crypto = require('crypto');
-const fetch = require('node-fetch');
+import crypto from 'crypto';
+import fetch from 'node-fetch';
 
 // Kelas CryptoJsAes untuk enkripsi dan dekripsi
 class CryptoJsAes {
@@ -95,8 +95,12 @@ async function getEmbedUrl(request) {
     }
 }
 
-// Fungsi untuk request data dari API
-async function fetchData() {
+// Endpoint API Vercel
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     const url = 'https://tv4.idlix.asia/wp-admin/admin-ajax.php';
     const body = 'action=doo_player_ajax&post=124474&nume=1&type=movie';
 
@@ -115,11 +119,9 @@ async function fetchData() {
 
         const jsonResponse = await response.json();
         const result = await getEmbedUrl({ status: 200, data: jsonResponse });
-        console.log(result);
+
+        return res.status(200).json(result);
     } catch (error) {
-        console.error(`Fetch error: ${error}`);
+        return res.status(500).json({ error: error.message });
     }
 }
-
-// Jalankan fungsi fetchData
-fetchData();

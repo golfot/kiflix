@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import fetch from 'node-fetch';
+const crypto = require('crypto');
+const fetch = require('node-fetch');
 
 // Kelas CryptoJsAes untuk enkripsi dan dekripsi
 class CryptoJsAes {
@@ -68,26 +68,48 @@ function dec(r, e) {
 // Fungsi untuk mendapatkan embed URL
 async function getEmbedUrl(request) {
     try {
+        // Debugging: Periksa respons lengkap
+        console.log('Complete Request Data:', request.data);
+
         if (request.status === 200 && request.data.embed_url) {
-            const embedUrl = CryptoJsAes.decrypt(
+            const key = request.data.key;
+            const mValue = JSON.parse(request.data.embed_url)?.m;
+
+            // Validasi key dan mValue
+            if (!key || !mValue) {
+                console.error('Key or mValue missing:', { key, mValue });
+                return {
+                    status: false,
+                    message: 'Invalid key or mValue for decryption'
+                };
+            }
+
+            // Debugging: Log params sebelum dekripsi
+            console.log('Decrypt Params:', {
+                embed_url: request.data.embed_url,
+                passphrase: dec(key, mValue)
+            });
+
+            const embedUrlDecrypted = CryptoJsAes.decrypt(
                 request.data.embed_url,
-                dec(
-                    request.data.key,
-                    JSON.parse(request.data.embed_url).m
-                )
+                dec(key, mValue)
             );
+
+            console.log('Decrypted Embed URL:', embedUrlDecrypted);
 
             return {
                 status: true,
-                embed_url: embedUrl
+                embed_url: embedUrlDecrypted
             };
         } else {
+            console.error('Invalid Response:', request);
             return {
                 status: false,
                 message: 'Failed to get embed URL'
             };
         }
     } catch (error) {
+        console.error('Decryption Error:', error);
         return {
             status: false,
             message: error.toString()
@@ -95,12 +117,8 @@ async function getEmbedUrl(request) {
     }
 }
 
-// Endpoint API Vercel
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
+// Fungsi untuk request data dari API
+async function fetchData() {
     const url = 'https://tv4.idlix.asia/wp-admin/admin-ajax.php';
     const body = 'action=doo_player_ajax&post=124474&nume=1&type=movie';
 
@@ -118,10 +136,16 @@ export default async function handler(req, res) {
         }
 
         const jsonResponse = await response.json();
-        const result = await getEmbedUrl({ status: 200, data: jsonResponse });
+        
+        // Debugging: Log raw API response
+        console.log('Raw API Response:', jsonResponse);
 
-        return res.status(200).json(result);
+        const result = await getEmbedUrl({ status: 200, data: jsonResponse });
+        console.log(result);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error(`Fetch error: ${error}`);
     }
 }
+
+// Jalankan fungsi fetchData
+fetchData();
